@@ -1,15 +1,60 @@
 import { DefaultUi, Player, Youtube } from "@vime/react";
 import { CaretRight, DiscordLogo, FileArrowDown, Lightning } from "phosphor-react";
-
+import { gql, useQuery } from "@apollo/client";
 import '@vime/core/themes/default.css';
 
-export function Video() {
+const GET_LESSON_BY_SLUG_QUERY = gql`
+query GetLessonBySlug($slug: String){
+  lesson(where: {slug: $slug}) {
+    title
+    videoId
+    description
+    teacher {
+      name
+      bio
+      avatarURL
+    }
+  }
+}
+`
+interface GetLessonBySlugResponse{
+  lesson: {
+    title: string;
+    videoId: string;
+    description: string;
+    teacher: {
+      name: string;
+      bio: string;
+      avartarURL: string;
+    }
+  }
+}
+
+interface VideoProps{
+  lessonSlug: string;
+}
+
+export function Video(props: VideoProps) {
+  const { data } = useQuery<GetLessonBySlugResponse>(GET_LESSON_BY_SLUG_QUERY, {
+    variables: {
+      slug: props.lessonSlug,
+    }
+  })
+
+  if (!data){
+    return(
+      <div className="flex-1">
+        <p>Carregando...</p>
+      </div>
+    ) 
+  }
+
   return (
     <div className="flex-1">
       <div className="bg-black flex justify-center">
         <div className="h-full w-full max-w-[1100px] max-h-[60vh] aspect-video">
           <Player>
-            <Youtube videoId="cUT665tW4v8" />
+            <Youtube videoId={data.lesson.videoId} />
             <DefaultUi />
           </Player>
         </div>
@@ -19,12 +64,10 @@ export function Video() {
         <div className="flex items-start gap-16">
           <div className="flex-1">
             <h1 className="text-2xl font-bold">
-              Abertura do IgniteLab
+              {data.lesson.title}
             </h1>
             <p className="mt-4 text-gray-200 leading-relaxed">
-              Participe da abertura do Ignite Lab e descubra na prática a
-              biblioteca JavaScript utilizada por grandes empresas na construção
-              de interfaces web.
+              {data.lesson.description}
             </p>
 
             <div className="flex items-center gap-4 mt-6">
