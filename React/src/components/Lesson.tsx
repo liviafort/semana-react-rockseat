@@ -1,8 +1,8 @@
 import { CheckCircle, Lock } from 'phosphor-react'
-import { Link, useParams } from 'react-router-dom';
 import classNames from 'classNames'
 import { format, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Link, useParams } from 'react-router-dom';
 
 interface LessonProps{
   title: string;
