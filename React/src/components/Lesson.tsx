@@ -1,8 +1,8 @@
 import { CheckCircle, Lock } from 'phosphor-react'
-import { isPast, format } from 'date-fns' 
-import  ptBR  from 'date-fns/locale/pt-BR'
 import { Link, useParams } from 'react-router-dom';
 import classNames from 'classNames'
+import { format, isPast } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface LessonProps{
   title: string;
@@ -14,7 +14,7 @@ interface LessonProps{
 export function Lesson(props: LessonProps){
   const { slug } = useParams<{ slug: string }>();
   const isLessonAvailable = isPast(props.availableAt);
-  const availableDateFromatted = format(props.availableAt, "EEEE' • 'd' de ' MMMM' • ' k'h'mm", {
+  const availableDateFormatted = format(props.availableAt,  "EEEE' • 'd' de ' MMMM' • ' k'h'mm",{
     locale: ptBR,
   })
 
@@ -23,7 +23,7 @@ export function Lesson(props: LessonProps){
   return(
       <Link to={`/event/lesson/${props.slug}`} className="group">
       <span className="text-gray-300">
-        {availableDateFromatted}
+        {availableDateFormatted}
       </span>
       <div
         className={classNames("rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500",
